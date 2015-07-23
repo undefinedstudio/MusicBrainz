@@ -44,7 +44,7 @@ class GuzzleHttpAdapter extends AbstractHttpAdapter
             throw new Exception('You must set a valid User Agent before accessing the MusicBrainz API');
         }
 
-        $options = [
+        $callOptions = [
             'base_uri' => self::URL,
             'query' => $params,
             'headers' => [
@@ -60,7 +60,7 @@ class GuzzleHttpAdapter extends AbstractHttpAdapter
                 throw new Exception('Authentication is required');
             }
         }
-        $response = $this->client->get($path, $options);
+        $response = $this->client->get($path, $callOptions);
         return json_decode($response->getBody()->getContents(), true);
 /*
         $this->client->setBaseUrl(self::URL);
