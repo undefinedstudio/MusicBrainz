@@ -45,7 +45,6 @@ class GuzzleHttpAdapter extends AbstractHttpAdapter
             throw new Exception('You must set a valid User Agent before accessing the MusicBrainz API');
         }
 
-        $this->client->
         $options = [
             'base_uri' => self::URL,
             'query' => $params,
