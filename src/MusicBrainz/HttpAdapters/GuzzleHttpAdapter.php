@@ -2,6 +2,7 @@
 
 namespace MusicBrainz\HttpAdapters;
 
+use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use MusicBrainz\Exception;
 
@@ -13,16 +14,16 @@ class GuzzleHttpAdapter extends AbstractHttpAdapter
     /**
      * The Guzzle client used to make cURL requests
      *
-     * @var \GuzzleHttp\ClientInterface
+     * @var \GuzzleHttp\Client
      */
     private $client;
 
     /**
      * Initializes the class.
      *
-     * @param \GuzzleHttp\ClientInterface $client The Guzzle client used to make requests
+     * @param \GuzzleHttp\Client $client The Guzzle client used to make requests
      */
-    public function __construct(ClientInterface $client)
+    public function __construct(Client $client)
     {
         $this->client = $client;
     }
@@ -44,6 +45,26 @@ class GuzzleHttpAdapter extends AbstractHttpAdapter
             throw new Exception('You must set a valid User Agent before accessing the MusicBrainz API');
         }
 
+        $this->client->
+        $options = [
+            'base_uri' => self::URL,
+            'query' => $params,
+            'headers' => [
+                'User-Agent' => $options['user-agent'],
+                'Accept'     => 'application/json',
+            ]
+        ];
+
+        if ($isAuthRequired) {
+            if ($options['user'] != null && $options['password'] != null) {
+                $options['auth'] = ['username', 'password', 'digest'];
+            } else {
+                throw new Exception('Authentication is required');
+            }
+        }
+        $response = $this->client->get($path, $options);
+        return $response->getBody();
+/*
         $this->client->setBaseUrl(self::URL);
         $this->client->setConfig(
                      array(
@@ -68,6 +89,6 @@ class GuzzleHttpAdapter extends AbstractHttpAdapter
         // musicbrainz throttle
         sleep(1);
 
-        return $request->send()->json();
+        return $request->send()->json();*/
     }
 }
