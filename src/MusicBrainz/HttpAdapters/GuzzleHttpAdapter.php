@@ -61,7 +61,7 @@ class GuzzleHttpAdapter extends AbstractHttpAdapter
             }
         }
         $response = $this->client->get($path, $options);
-        return $response->getBody();
+        return $response->getBody()->getContents();
 /*
         $this->client->setBaseUrl(self::URL);
         $this->client->setConfig(
