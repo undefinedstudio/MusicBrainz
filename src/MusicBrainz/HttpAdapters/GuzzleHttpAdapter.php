@@ -3,7 +3,6 @@
 namespace MusicBrainz\HttpAdapters;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\ClientInterface;
 use MusicBrainz\Exception;
 
 /**

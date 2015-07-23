@@ -10,7 +10,7 @@ abstract class AbstractHttpAdapter
     /**
      * @var string
      */
-    const URL = 'http://musicbrainz.org/ws/2';
+    const URL = 'http://musicbrainz.org/ws/2/';
 
     /**
      * Perform an HTTP request on MusicBrainz
