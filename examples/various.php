@@ -10,7 +10,9 @@ $mb->setUserAgent('EternityMBLibrary', '0.0.1', 'luca.horn@gmail.com');
 //$test = new \MusicBrainz\CallOptions();
 //var_dump($test->get());
 
-$co = new \MusicBrainz\CallOptions();
+$co = new \MusicBrainz\models\CallOptions();
 $co->authRequired = false;
 $json = $mb->call('artist/53b106e7-0cc6-42cc-ac95-ed8d30a3a98e', [], $co);
 var_dump($json);
+
+//var_dump(\MusicBrainz\models\Includes::artistAllowed);

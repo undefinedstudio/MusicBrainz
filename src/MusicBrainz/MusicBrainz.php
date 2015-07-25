@@ -4,7 +4,7 @@ namespace MusicBrainz;
 
 use Exception;
 use GuzzleHttp\Client;
-use ReflectionClass;
+use MusicBrainz\models\CallOptions;
 
 class MusicBrainz
 {
@@ -83,11 +83,6 @@ class MusicBrainz
         return $this->_userAgent;
     }
 
-    public function getClassConstants($class) {
-        $reflectionClass = new ReflectionClass($class);
-        return $reflectionClass->getConstants();
-    }
-
     #endregion
 
     #region Validators
@@ -97,31 +92,14 @@ class MusicBrainz
         return !empty($this->_username) && !empty($this->_password);
     }
 
-    public function isValidEntityType($entityType)
-    {
-        $constants = $this->getClassConstants(EntityType::class);
-        return array_key_exists($entityType, $constants);
-    }
-
-    public function isValidCallType($callType)
-    {
-        $constants = $this->getClassConstants(CallType::class);
-        return array_key_exists($callType, $constants);
-    }
-
-    public function isValidMbid($mbid)
-    {
-        return preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i', $mbid);
-    }
-
     #endregion
 
     public function lookup($entityType, $mbid, $includes = [])
     {
-        if (!$this->isValidEntityType($entityType)) {
+        if (!Utilities::isValidEntityType($entityType)) {
             throw new Exception("EntityType " . $entityType . " is not valid.");
         }
-        if (!$this->isValidMbid($mbid)) {
+        if (!Utilities::isValidMbid($mbid)) {
             throw new Exception("MusicBrainz ID " . $mbid . " is not valid.");
         }
         //TODO
