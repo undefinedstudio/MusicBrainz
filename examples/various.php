@@ -1,6 +1,5 @@
 <?php
 
-
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 $mb = new \MusicBrainz\MusicBrainz();
@@ -12,7 +11,6 @@ $mb->setUserAgent('EternityMBLibrary', '0.0.1', 'luca.horn@gmail.com');
 
 $co = new \MusicBrainz\models\CallOptions();
 $co->authRequired = false;
-$json = $mb->call('artist/53b106e7-0cc6-42cc-ac95-ed8d30a3a98e', [], $co);
+$json = $mb->lookup(\MusicBrainz\models\EntityType::artist, '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e', [\MusicBrainz\models\Includes::artistcredits, \MusicBrainz\models\Includes::releases]);
 var_dump($json);
-
 //var_dump(\MusicBrainz\models\Includes::artistAllowed);

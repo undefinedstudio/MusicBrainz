@@ -2,6 +2,7 @@
 
 namespace MusicBrainz;
 
+use MusicBrainz\models\EntityType;
 use ReflectionClass;
 
 class Utilities

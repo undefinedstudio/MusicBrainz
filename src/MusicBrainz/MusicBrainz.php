@@ -5,6 +5,7 @@ namespace MusicBrainz;
 use Exception;
 use GuzzleHttp\Client;
 use MusicBrainz\models\CallOptions;
+use MusicBrainz\models\Includes;
 
 class MusicBrainz
 {
@@ -94,7 +95,7 @@ class MusicBrainz
 
     #endregion
 
-    public function lookup($entityType, $mbid, $includes = [])
+    public function lookup($entityType, $mbid, $includes = [], $username = null, $password = null)
     {
         if (!Utilities::isValidEntityType($entityType)) {
             throw new Exception("EntityType " . $entityType . " is not valid.");
@@ -102,8 +103,29 @@ class MusicBrainz
         if (!Utilities::isValidMbid($mbid)) {
             throw new Exception("MusicBrainz ID " . $mbid . " is not valid.");
         }
-        //TODO
-        //$this->getClient()->get();
+        $options = new CallOptions();
+        if ($username || $password) {
+            if (empty($username) || empty($password)) {
+                throw new Exception("Both username and password are required in the authorization process.");
+            }
+            $options->username = $username;
+            $options->password = $password;
+        } elseif ($this->isHttpAuthDoable()) {
+            $options->username = $this->_username;
+            $options->password = $this->_password;
+        }
+
+        Includes::validate($entityType, $includes, $options);
+        $path = $entityType . "/" . $mbid;
+        $query = [
+            'inc' => implode('+', $includes),
+            'fmt' => 'json'
+        ];
+
+        $callResponse = $this->call($path, $query, $options);
+        return $callResponse;
+
+        //TODO instantiate model.
     }
 
     public function call($path, $query, CallOptions $options = null)
