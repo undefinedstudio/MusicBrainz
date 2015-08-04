@@ -4,8 +4,11 @@ namespace MusicBrainz;
 
 use Exception;
 use GuzzleHttp\Client;
+use MusicBrainz\models\Artist;
 use MusicBrainz\models\CallOptions;
+use MusicBrainz\models\EntityType;
 use MusicBrainz\models\Includes;
+use ReflectionClass;
 
 class MusicBrainz
 {
@@ -95,6 +98,8 @@ class MusicBrainz
 
     #endregion
 
+    // TODO: wrapper functions lookupArtist() lookupRelease() etc.
+
     public function lookup($entityType, $mbid, $includes = [], $username = null, $password = null)
     {
         if (!Utilities::isValidEntityType($entityType)) {
@@ -123,9 +128,10 @@ class MusicBrainz
         ];
 
         $callResponse = $this->call($path, $query, $options);
-        return $callResponse;
+        $callResponseDecoded = json_decode($callResponse, true);
+        $responseObject = $this->buildResponseObject($entityType, $callResponseDecoded);
 
-        //TODO instantiate model.
+        return $responseObject;
     }
 
     public function call($path, $query, CallOptions $options = null)
@@ -158,5 +164,17 @@ class MusicBrainz
         }
         $response = $this->getClient()->get($path, $clientOptions);
         return (string)$response->getBody();
+    }
+
+    public function buildResponseObject($entityType, $callResponse)
+    {
+        $modelMap = EntityType::modelMap;
+        if (!isset($modelMap[$entityType])) {
+            throw new Exception('No model map found for ' . $entityType . ' EntityType.');
+        }
+
+        $className = $modelMap[$entityType];
+        return call_user_func($className . '::create', $callResponse);
+
     }
 }

@@ -23,4 +23,9 @@ abstract class EntityType
     const discid = 'discid';
     const isrc = 'isrc';
     const iswc = 'iswc';
+
+    const modelMap = [
+        self::area => Area::class,
+        self::artist => Artist::class,
+    ];
 }

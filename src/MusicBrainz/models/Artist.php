@@ -2,48 +2,56 @@
 
 namespace MusicBrainz\models;
 
+/**
+ * @property string $id
+ * @property string $name
+ * @property string $sortName
+ * @property string $type
+ * @property string $disambiguation
+ * @property string $country
+ * @property array $ipis musical rights management numbers ({@link https://musicbrainz.org/doc/IPI Documentation}).
+ * @property Area $area
+ * @property Area $beginArea
+ * @property Area $endArea
+ * @property LifeSpan $lifeSpan
+ * @property Recording[] $recordings
+ * @property Release[] $releases
+ * @property ReleaseGroup[] $releaseGroups
+ */
 class Artist extends ParserModel
 {
-    public $id;
-    public $name;
-    public $sortName;
-    public $type;
-    public $disambiguation;
-    public $country;
-    /**
-     * Numbers assigned to each Interested Party in musical rights management.
-     * @var array
-     * @link https://musicbrainz.org/doc/IPI
-     */
-    public $ipis;
-    /**
-     * @var Area
-     */
-    public $area;
-    /**
-     * @var Area
-     */
-    public $beginArea;
-    /**
-     * @var Area
-     */
-    public $endArea;
-    /**
-     * @var LifeSpan;
-     */
-    public $lifeSpan;
-
-    public function parseData($data) {
-        $this->id = $data->id;
-        $this->name = $data->name;
-        $this->sortName = $data->{'sort-name'};
-        $this->type = $data->type;
-        $this->disambiguation = $data->disambiguation;
-        $this->country = $data->country;
-        $this->ipis = $data->ipis;
-        $this->area = Area::create($data->area);
-        $this->beginArea = Area::create($data->begin_area);
-        $this->endArea = Area::create($data->end_area);
-        $this->lifeSpan = LifeSpan::create($data->{'life-span'});
+    public function config()
+    {
+        return [
+            'sort-name' => 'sortName',
+            'area' => [
+                'class' => Area::class
+            ],
+            'begin_area' => [
+                'name' => 'beginArea',
+                'class' => Area::class
+            ],
+            'end_area' => [
+                'name' => 'endArea',
+                'class' => Area::class
+            ],
+            'life-span' => [
+                'name' => 'lifeSpan',
+                'class' => LifeSpan::class
+            ],
+            'recordings' => [
+                'class' => Recording::class,
+                'multiple' => true
+            ],
+            'releases' => [
+                'class' => Release::class,
+                'multiple' => true
+            ],
+            'release-groups' => [
+                'name' => 'releaseGroups',
+                'class' => ReleaseGroup::class,
+                'multiple' => true
+            ]
+        ];
     }
 }

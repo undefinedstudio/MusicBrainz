@@ -11,6 +11,8 @@ $mb->setUserAgent('EternityMBLibrary', '0.0.1', 'luca.horn@gmail.com');
 
 $co = new \MusicBrainz\models\CallOptions();
 $co->authRequired = false;
-$json = $mb->lookup(\MusicBrainz\models\EntityType::artist, '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e', [\MusicBrainz\models\Includes::artistcredits, \MusicBrainz\models\Includes::releases]);
-var_dump($json);
-//var_dump(\MusicBrainz\models\Includes::artistAllowed);
+/** @var \MusicBrainz\models\Artist $data */
+$data = $mb->lookup(\MusicBrainz\models\EntityType::artist, '5b11f4ce-a62d-471e-81fc-a69a8278c7da', [\MusicBrainz\models\Includes::releasegroups]);
+var_dump($data);
+
+
