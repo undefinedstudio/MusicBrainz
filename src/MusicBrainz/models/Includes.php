@@ -68,8 +68,6 @@ abstract class Includes
         self::userratings => [
             self::authRequired => true
         ]
-
-
     ];
 
     //TODO Allowed includes arrays for all entity types
