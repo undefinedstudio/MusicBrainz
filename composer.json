@@ -13,6 +13,11 @@
         "email": "hardsetting@gmail.com",
         "homepage": "http://twistedmirrorgames.com"
       }
+      {
+        "name": "Davide Della Casa Venturelli",
+        "email": "daliran88@gmail.com",
+        "homepage": "http://twistedmirrorgames.com"
+      }
     ],
     "keywords": ["musicbrainz", "library", "php", "webservice", "api"],
     "homepage": "https://github.com/undefinedstudio/musicbrainz",
