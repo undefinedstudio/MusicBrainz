@@ -8,6 +8,7 @@ namespace MusicBrainz\models;
  * @property string $asin
  * @property string $barcode
  * @property string $disambiguation
+ * @property Media[] $media
  * @property string $packaging
  * @property string $quality
  * @property string $date
@@ -15,6 +16,7 @@ namespace MusicBrainz\models;
  * @property string $country
  * @property ReleaseEvent[] $releaseEvents
  * @property TextRepresentation[] $textRepresentation
+ * @property ArtistCredit[] $artistCredits
  */
 class Release extends ParserModel
 {
@@ -29,7 +31,17 @@ class Release extends ParserModel
             'text-representation' => [
                 'name' => 'textRepresentation',
                 'class' => TextRepresentation::class
-            ]
+            ],
+            'media' => [
+                'class' => Media::class,
+                'multiple' => true
+            ],
+            'artist-credit' => [
+                'name' => 'artistCredits',
+                'class' => ArtistCredit::class,
+                'multiple' => true
+            ],
+
         ];
     }
 }

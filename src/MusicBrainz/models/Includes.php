@@ -17,7 +17,7 @@ abstract class Includes
     const releasegroups = 'release-groups';
     const works = 'works';
 
-    const discids = 'discids';
+    const discs = 'discids';
     const media = 'media';
     const isrcs = 'isrcs';
     const artistcredits = 'artist-credits';
@@ -34,7 +34,7 @@ abstract class Includes
         self::releases => [],
         self::releasegroups => [],
         self::works => [],
-        self::discids => [
+        self::discs => [ // This automatically loads the media include
             self::dependencyRequired => [
                 self::releases
             ]

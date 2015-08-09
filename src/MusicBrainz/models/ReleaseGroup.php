@@ -9,6 +9,7 @@ namespace MusicBrainz\models;
  * @property string $firstReleaseDate
  * @property string $disambiguation
  * @property array $secondaryTypes
+ * @property ArtistCredit[] $artistCredits
  */
 class ReleaseGroup extends ParserModel
 {
@@ -17,7 +18,12 @@ class ReleaseGroup extends ParserModel
         return [
             'primary-type' => 'primaryType',
             'secondary-types' => 'secondaryTypes',
-            'first-release-date' => 'firstReleaseDate'
+            'first-release-date' => 'firstReleaseDate',
+            'artist-credit' => [
+                'name' => 'artistCredits',
+                'class' => ArtistCredit::class,
+                'multiple' => true
+            ],
         ];
     }
 }

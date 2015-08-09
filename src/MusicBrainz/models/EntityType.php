@@ -27,6 +27,7 @@ abstract class EntityType
     const modelMap = [
         self::area => Area::class,
         self::artist => Artist::class,
+        self::work => Work::class,
         // TODO: all other models
     ];
 }

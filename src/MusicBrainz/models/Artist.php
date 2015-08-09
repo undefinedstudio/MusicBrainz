@@ -51,7 +51,11 @@ class Artist extends ParserModel
                 'name' => 'releaseGroups',
                 'class' => ReleaseGroup::class,
                 'multiple' => true
-            ]
+            ],
+            'works' => [
+                'class' => Work::class,
+                'multiple' => true
+            ],
         ];
     }
 }
