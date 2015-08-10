@@ -115,6 +115,31 @@ abstract class Includes
         ],
     ];
 
+    const releaseRules = [
+        self::artists => [],
+        self::labels => [],
+        self::recordings => [],
+        self::releasegroups => [],
+        self::discs => [],
+        self::media => [],
+        self::isrcs => [
+            self::dependencyRequired => [
+                self::recordings
+            ]
+        ],
+        self::artistcredits => [],
+        self::aliases => [],
+        self::annotation => [],
+        self::tags => [],
+        self::rating => [],
+        self::usertags => [
+            self::authRequired => true
+        ],
+        self::userratings => [
+            self::authRequired => true
+        ]
+    ];
+
     //TODO Allowed includes arrays for all entity types
 
     static function validate($entityType, $includes, CallOptions $options)

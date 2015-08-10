@@ -20,17 +20,27 @@ abstract class EntityType
     const tag = 'tag';
     const collection = 'collection';
 
-    const discid = 'discid';
+    const disc = 'discid';
     const isrc = 'isrc';
     const iswc = 'iswc';
 
     const modelMap = [
         self::area => Area::class,
         self::artist => Artist::class,
-        self::work => Work::class,
         self::event => Event::class,
-        self::label => Label::class,
         self::instrument => Instrument::class,
-        // TODO: all other models
+        self::label => Label::class,
+        self::recording => Recording::class,
+        self::release => Release::class,
+        self::releasegroup => ReleaseGroup::class,
+        //self::series => Serie::class,
+        self::work => Work::class,
+        //self::url => Url::class,
+        self::rating => Rating::class,
+        self::tag => Tag::class,
+        //self::collection => Collection::class,
+        self::disc => Disc::class,
+        self::isrc => Isrc::class,
+        //self::iswc => Iswc::class,
     ];
 }
