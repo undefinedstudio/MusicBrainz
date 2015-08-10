@@ -29,6 +29,7 @@ abstract class EntityType
         self::artist => Artist::class,
         self::work => Work::class,
         self::event => Event::class,
+        self::instrument => Instrument::class,
         // TODO: all other models
     ];
 }

@@ -92,6 +92,15 @@ abstract class Includes
         ]
     ];
 
+    const instrumentRules = [
+        self::aliases => [],
+        self::annotation => [],
+        self::tags => [],
+        self::usertags => [
+            self::authRequired => true
+        ],
+    ];
+
     //TODO Allowed includes arrays for all entity types
 
     static function validate($entityType, $includes, CallOptions $options)
