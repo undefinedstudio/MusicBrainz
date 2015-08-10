@@ -29,6 +29,15 @@ abstract class Includes
     const usertags = 'user-tags';
     const userratings = 'user-ratings';
 
+    const areaRules = [
+        self::aliases => [],
+        self::annotation => [],
+        self::tags => [],
+        self::usertags => [
+            self::authRequired => true
+        ],
+    ];
+
     const artistRules = [
         self::recordings => [],
         self::releases => [],
