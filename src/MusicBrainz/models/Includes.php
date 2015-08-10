@@ -25,7 +25,7 @@ abstract class Includes
     const aliases = 'aliases';
     const annotation = 'annotation';
     const tags = 'tags';
-    const ratings = 'ratings';
+    const rating = 'ratings';
     const usertags = 'user-tags';
     const userratings = 'user-ratings';
 
@@ -61,7 +61,7 @@ abstract class Includes
         self::aliases => [],
         self::annotation => [],
         self::tags => [],
-        self::ratings => [],
+        self::rating => [],
         self::usertags => [
             self::authRequired => true
         ],

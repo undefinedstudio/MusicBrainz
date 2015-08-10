@@ -17,6 +17,12 @@ namespace MusicBrainz\models;
  * @property Recording[] $recordings
  * @property Release[] $releases
  * @property ReleaseGroup[] $releaseGroups
+ * @property Alias[] $aliases
+ * @property string $annotation
+ * @property Tag[] $tags
+ * @property Rating $rating
+ * @property UserRating $userRating
+ * @property UserTag[] $userTags
  */
 class Artist extends ParserModel
 {
@@ -54,6 +60,26 @@ class Artist extends ParserModel
             ],
             'works' => [
                 'class' => Work::class,
+                'multiple' => true
+            ],
+            'aliases' => [
+                'class' => Alias::class,
+                'multiple' => true
+            ],
+            'tags' => [
+                'class' => Tag::class,
+                'multiple' => true
+            ],
+            'rating' => [
+                'class' => Rating::class,
+            ],
+            'user-rating' => [
+                'name' => 'userRating',
+                'class' => UserRating::class,
+            ],
+            'user-tags' => [
+                'name' => 'userTags',
+                'class' => UserTag::class,
                 'multiple' => true
             ],
         ];
