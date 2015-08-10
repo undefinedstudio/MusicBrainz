@@ -92,6 +92,20 @@ abstract class Includes
         ]
     ];
 
+    const labelRules = [
+        self::releases => [],
+        self::discs => [ // This automatically loads the media include
+            self::dependencyRequired => [
+                self::releases
+            ]
+        ],
+        self::media => [
+            self::dependencyRequired => [
+                self::releases
+            ]
+        ],
+    ];
+
     //TODO Allowed includes arrays for all entity types
 
     static function validate($entityType, $includes, CallOptions $options)
