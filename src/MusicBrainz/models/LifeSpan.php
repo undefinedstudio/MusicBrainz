@@ -2,7 +2,7 @@
 
 namespace MusicBrainz\models;
 /**
- * @property string $ended
+ * @property boolean $ended
  * @property string $begin
  * @property string $end
  */

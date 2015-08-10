@@ -79,6 +79,19 @@ abstract class Includes
         ]
     ];
 
+    const eventRules = [
+        self::aliases => [],
+        self::annotation => [],
+        self::tags => [],
+        self::rating => [],
+        self::usertags => [
+            self::authRequired => true
+        ],
+        self::userratings => [
+            self::authRequired => true
+        ]
+    ];
+
     //TODO Allowed includes arrays for all entity types
 
     static function validate($entityType, $includes, CallOptions $options)

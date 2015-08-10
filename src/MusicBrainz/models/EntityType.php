@@ -28,6 +28,7 @@ abstract class EntityType
         self::area => Area::class,
         self::artist => Artist::class,
         self::work => Work::class,
+        self::event => Event::class,
         // TODO: all other models
     ];
 }
