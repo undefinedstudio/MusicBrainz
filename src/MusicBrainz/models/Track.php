@@ -8,6 +8,7 @@ namespace MusicBrainz\models;
  * @property string $id
  * @property string $title
  * @property Recording $recording
+ * @property ArtistCredit[] $artistCredit
  */
 class Track extends ParserModel
 {
@@ -16,6 +17,11 @@ class Track extends ParserModel
         return [
             'recording' => [
                 'class' => Recording::class
+            ],
+            'artist-credit' => [
+                'name' => 'artistCredit',
+                'class' => ArtistCredit::class,
+                'multiple' => true
             ],
         ];
     }

@@ -7,8 +7,10 @@ namespace MusicBrainz\models;
  */
 class Isrc extends ParserModel
 {
-    //TODO: There is a bug when calling the Music Brainz webservice with the json format option, at the moment only the xml format works
-    //http://tickets.musicbrainz.org/browse/MBS-7921
+    // TODO: wait for the bugfix
+    // There is a critical bug when calling the Music Brainz webservice with the json format option.
+    // Only the xml format works at the moment.
+    // Reference: http://tickets.musicbrainz.org/browse/MBS-7921
 
     public function config()
     {

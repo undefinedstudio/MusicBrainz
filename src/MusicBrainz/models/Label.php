@@ -13,6 +13,7 @@ namespace MusicBrainz\models;
  * @property string $disambiguation
  * @property string $type
  * @property string $name
+ *
  * @property Release[] $releases
  * @property Alias[] $aliases
  * @property string $annotation

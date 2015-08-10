@@ -14,11 +14,18 @@ namespace MusicBrainz\models;
  * @property string $date
  * @property string $status
  * @property string $country
+ * @property string $annotation
+ * @property ReleaseGroup $releaseGroup
  * @property ReleaseEvent[] $releaseEvents
  * @property TextRepresentation[] $textRepresentation
  * @property ArtistCredit[] $artistCredits
  * @property CoverArtArchive $coverArtArchive
  * @property LabelInfo $labelInfo
+ * @property Alias[] $aliases
+ * @property Tag[] $tags
+ * @property Rating $rating
+ * @property UserRating $userRating
+ * @property UserTag[] $userTags
  */
 class Release extends ParserModel
 {
@@ -52,7 +59,30 @@ class Release extends ParserModel
                 'name' => 'coverArtArchive',
                 'class' => CoverArtArchive::class,
             ],
-
+            'release-group' => [
+                'name' => 'releaseGroup',
+                'class' => ReleaseGroup::class,
+            ],
+            'aliases' => [
+                'class' => Alias::class,
+                'multiple' => true
+            ],
+            'tags' => [
+                'class' => Tag::class,
+                'multiple' => true
+            ],
+            'rating' => [
+                'class' => Rating::class,
+            ],
+            'user-rating' => [
+                'name' => 'userRating',
+                'class' => UserRating::class,
+            ],
+            'user-tags' => [
+                'name' => 'userTags',
+                'class' => UserTag::class,
+                'multiple' => true
+            ],
         ];
     }
 }

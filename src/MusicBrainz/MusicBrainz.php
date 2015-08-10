@@ -105,9 +105,11 @@ class MusicBrainz
         if (!Utilities::isValidEntityType($entityType)) {
             throw new Exception("EntityType " . $entityType . " is not valid.");
         }
-        if (!Utilities::isValidMbid($mbid)) {
+
+        if (!in_array($entityType, EntityType::nonMBIDFormat) && !Utilities::isValidMbid($mbid)) {
             throw new Exception("MusicBrainz ID " . $mbid . " is not valid.");
         }
+
         $options = new CallOptions();
         if ($username || $password) {
             if (empty($username) || empty($password)) {
@@ -120,7 +122,7 @@ class MusicBrainz
             $options->password = $this->_password;
         }
 
-        Includes::validate($entityType, $includes, $options);
+        $includes = Includes::validate($entityType, $includes, $options);
         $path = $entityType . "/" . $mbid;
         $query = [
             'inc' => implode('+', $includes),

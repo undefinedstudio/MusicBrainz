@@ -11,7 +11,7 @@ abstract class EntityType
     const label = 'label';
     const recording = 'recording';
     const release = 'release';
-    const releasegroup = 'release-group';
+    const releaseGroup = 'release-group';
     const series = 'series';
     const work = 'work';
     const url = 'url';
@@ -32,15 +32,22 @@ abstract class EntityType
         self::label => Label::class,
         self::recording => Recording::class,
         self::release => Release::class,
-        self::releasegroup => ReleaseGroup::class,
-        //self::series => Serie::class,
+        self::releaseGroup => ReleaseGroup::class,
+        self::series => Series::class,
         self::work => Work::class,
-        //self::url => Url::class,
+        self::url => Url::class,
         self::rating => Rating::class,
         self::tag => Tag::class,
         //self::collection => Collection::class,
         self::disc => Disc::class,
         self::isrc => Isrc::class,
-        //self::iswc => Iswc::class,
+        self::iswc => Iswc::class,
     ];
+
+    const nonMBIDFormat = [
+        self::disc,
+        self::isrc,
+        self::iswc
+    ];
+
 }

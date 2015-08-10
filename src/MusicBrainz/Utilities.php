@@ -10,7 +10,7 @@ class Utilities
     public static function isValidEntityType($entityType)
     {
         $constants = self::getClassConstants(EntityType::class);
-        return array_key_exists($entityType, $constants);
+        return in_array($entityType, $constants);
     }
 
     public static function isValidCallType($callType)

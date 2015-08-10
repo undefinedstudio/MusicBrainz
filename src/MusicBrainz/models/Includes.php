@@ -2,6 +2,7 @@
 
 namespace MusicBrainz\models;
 
+use MusicBrainz\Utilities;
 use ReflectionClass;
 use Exception;
 
@@ -9,6 +10,7 @@ abstract class Includes
 {
     const authRequired = 'authRequired';
     const dependencyRequired = 'dependencyRequired';
+    const includeEverything = 'includeEverything';
 
     const artists = 'artists';
     const labels = 'labels';
@@ -113,7 +115,13 @@ abstract class Includes
                 self::releases
             ]
         ],
+        self::artistcredits => [
+            self::dependencyRequired => [
+                self::releases
+            ]
+        ],
         self::aliases => [],
+        self::annotation => [],
         self::tags => [],
         self::rating => [],
         self::usertags => [
@@ -171,6 +179,107 @@ abstract class Includes
         ]
     ];
 
+    const releaseGroupRules = [
+        self::artists => [],
+        self::releases => [],
+        self::discs => [
+            self::dependencyRequired => [
+                self::releases
+            ]
+        ],
+        self::media => [
+            self::dependencyRequired => [
+                self::releases
+            ]
+        ],
+        self::artistcredits => [],
+        self::aliases => [],
+        self::annotation => [],
+        self::tags => [],
+        self::rating => [],
+        self::usertags => [
+            self::authRequired => true
+        ],
+        self::userratings => [
+            self::authRequired => true
+        ]
+    ];
+
+    const seriesRules = [
+        self::aliases => [],
+        self::annotation => [],
+        self::tags => [],
+        self::usertags => [
+            self::authRequired => true
+        ],
+    ];
+
+    const workRules = [
+        self::aliases => [],
+        self::annotation => [],
+        self::tags => [],
+        self::rating => [],
+        self::usertags => [
+            self::authRequired => true
+        ],
+        self::userratings => [
+            self::authRequired => true
+        ]
+    ];
+
+    const urlRules = [];
+
+    const discRules = [
+        self::artists => [],
+        self::labels => [],
+        self::recordings => [],
+        self::releasegroups => [],
+        self::isrcs => [],
+        self::artistcredits => [],
+        self::aliases => [],
+    ];
+
+    // This is based on xml WS since JSON has a critical bug.
+    // See Isrc model for more information.
+    const isrcRules = [
+        self::artists => [],
+        self::releases => [],
+        self::discs => [
+            self::dependencyRequired => [
+                self::releases
+            ]
+        ],
+        self::media => [
+            self::dependencyRequired => [
+                self::releases
+            ]
+        ],
+        self::artistcredits => [],
+        self::aliases => [],
+        self::tags => [],
+        self::rating => [],
+        self::usertags => [
+            self::authRequired => true
+        ],
+        self::userratings => [
+            self::authRequired => true
+        ]
+    ];
+
+    const iswcRules = [
+        self::artists => [],
+        self::artistcredits => [],
+        self::aliases => [],
+        self::tags => [],
+        self::rating => [],
+        self::usertags => [
+            self::authRequired => true
+        ],
+        self::userratings => [
+            self::authRequired => true
+        ]
+    ];
+
     //TODO Allowed includes arrays for all entity types
 
     static function validate($entityType, $includes, CallOptions $options)
@@ -179,7 +288,15 @@ abstract class Includes
             return true;
         }
         $thisRef = new ReflectionClass(self::class);
-        $includeRules = $thisRef->getConstant($entityType . 'Rules');
+
+        $entityTypeConstants = Utilities::getClassConstants(EntityType::class);
+        $entityTypeName = array_search($entityType, $entityTypeConstants);
+        $includeRules = $thisRef->getConstant($entityTypeName . 'Rules');
+
+        if (in_array(self::includeEverything, $includes)) {
+            $includes = array_keys($includeRules);
+        }
+
         foreach ($includes as $include) {
             // If a rule is not found, it means the include required is not allowed for the entityType
             if (!isset($includeRules[$include])) {
@@ -207,6 +324,6 @@ abstract class Includes
                 }
             }
         }
-        return true;
+        return $includes;
     }
 }
