@@ -92,7 +92,16 @@ abstract class Includes
         ]
     ];
 
-    const labelRules = [
+    const instrumentRules = [
+        self::aliases => [],
+        self::annotation => [],
+        self::tags => [],
+        self::usertags => [
+            self::authRequired => true
+        ],
+    ];
+    
+     const labelRules = [
         self::releases => [],
         self::discs => [ // This automatically loads the media include
             self::dependencyRequired => [

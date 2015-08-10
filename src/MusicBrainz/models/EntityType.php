@@ -30,6 +30,7 @@ abstract class EntityType
         self::work => Work::class,
         self::event => Event::class,
         self::label => Label::class,
+        self::instrument => Instrument::class,
         // TODO: all other models
     ];
 }
