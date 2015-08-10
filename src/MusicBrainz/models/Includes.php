@@ -101,7 +101,7 @@ abstract class Includes
         ],
     ];
     
-     const labelRules = [
+    const labelRules = [
         self::releases => [],
         self::discs => [ // This automatically loads the media include
             self::dependencyRequired => [
@@ -113,6 +113,37 @@ abstract class Includes
                 self::releases
             ]
         ],
+        self::aliases => [],
+        self::tags => [],
+        self::rating => [],
+        self::usertags => [
+            self::authRequired => true
+        ],
+        self::userratings => [
+            self::authRequired => true
+        ]
+    ];
+
+    const recordingRules = [
+        self::artists => [],
+        self::releases => [],
+        self::discs => [ // This automatically loads the media include
+            self::dependencyRequired => [
+                self::releases
+            ]
+        ],
+        self::isrcs => [],
+        self::artistcredits => [],
+        self::aliases => [],
+        self::annotation => [],
+        self::tags => [],
+        self::rating => [],
+        self::usertags => [
+            self::authRequired => true
+        ],
+        self::userratings => [
+            self::authRequired => true
+        ]
     ];
 
     const releaseRules = [
