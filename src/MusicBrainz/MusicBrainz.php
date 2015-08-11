@@ -4,12 +4,9 @@ namespace MusicBrainz;
 
 use Exception;
 use GuzzleHttp\Client;
-use MusicBrainz\models\Artist;
 use MusicBrainz\models\CallOptions;
 use MusicBrainz\models\EntityType;
 use MusicBrainz\models\Includes;
-use ReflectionClass;
-
 class MusicBrainz
 {
     public $wsUrl = "http://musicbrainz.org/ws/2/";
@@ -42,6 +39,15 @@ class MusicBrainz
         }
         $this->_username = $username;
         $this->_password = $password;
+        return $this;
+    }
+
+    public function getHttpAuth()
+    {
+        if (!$this->isHttpAuthDoable()) {
+            throw new Exception("Authorization not possibile with given info.");
+        }
+        return [$this->_username, $this->_password, 'digest'];
     }
 
     public function getClient()
@@ -63,6 +69,7 @@ class MusicBrainz
     public function setWsUrl($wsUrl)
     {
         $this->wsUrl = $wsUrl;
+        return $this;
     }
 
     public function setUserAgent($application, $version, $contact = null)
@@ -77,6 +84,7 @@ class MusicBrainz
             trigger_error("Including contact information in the user agent is strongly encouraged.");
         }
         $this->_userAgent = $userAgent;
+        return $this;
     }
 
     public function getUserAgent()
@@ -100,7 +108,7 @@ class MusicBrainz
 
     // TODO: wrapper functions lookupArtist() lookupRelease() etc.
 
-    public function lookup($entityType, $mbid, $includes = [], $username = null, $password = null)
+    public function lookup($entityType, $mbid, $includes = [], CallOptions $options = null)
     {
         if (!Utilities::isValidEntityType($entityType)) {
             throw new Exception("EntityType " . $entityType . " is not valid.");
@@ -110,16 +118,12 @@ class MusicBrainz
             throw new Exception("MusicBrainz ID " . $mbid . " is not valid.");
         }
 
-        $options = new CallOptions();
-        if ($username || $password) {
-            if (empty($username) || empty($password)) {
-                throw new Exception("Both username and password are required in the authorization process.");
-            }
-            $options->username = $username;
-            $options->password = $password;
-        } elseif ($this->isHttpAuthDoable()) {
-            $options->username = $this->_username;
-            $options->password = $this->_password;
+        if (empty($options)) {
+            $options = new CallOptions();
+        }
+
+        if ($this->isHttpAuthDoable() && !$options->isHttpAuthDoable()) {
+            $options->setHttpAuth($this->_username, $this->_password);
         }
 
         $includes = Includes::validate($entityType, $includes, $options);
@@ -142,6 +146,8 @@ class MusicBrainz
             $options = new CallOptions();
         }
 
+        $query = array_merge($query, $options->getQueryParameters());
+
         $clientOptions = [
             'base_uri' => $this->getWsUrl(),
             'query' => $query,
@@ -153,15 +159,13 @@ class MusicBrainz
 
         // If authorization is required, first checks for username and password in the CallOptions object,
         // then in the main MusicBrainz object.
-        // Login information should ideally always be defined in the main object, please set them in the
-        // CallOptions object only to override the default behaviour.
         if ($options->isAuthRequired()) {
             if ($options->isHttpAuthDoable()) {
-                $clientOptions['auth'] = [$options->username, $options->password, 'digest'];
+                $clientOptions['auth'] = $options->getHttpAuth();
             } elseif ($this->isHttpAuthDoable()) {
-                $clientOptions['auth'] = [$this->_username, $this->_password, 'digest'];
+                $clientOptions['auth'] = $this->getHttpAuth();
             } else {
-                throw new Exception('Authentication is required. Please set username and password.');
+                throw new Exception("Authentication is required. Please set username and password.");
             }
         }
         $response = $this->getClient()->get($path, $clientOptions);
@@ -172,7 +176,11 @@ class MusicBrainz
     {
         $modelMap = EntityType::modelMap;
         if (!isset($modelMap[$entityType])) {
-            throw new Exception('No model map found for ' . $entityType . ' EntityType.');
+            throw new Exception("No model map found for " . $entityType . " EntityType.");
+        }
+
+        if (!is_array($callResponse)) {
+            throw new Exception("A null response was received.");
         }
 
         $className = $modelMap[$entityType];
