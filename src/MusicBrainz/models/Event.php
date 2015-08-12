@@ -1,6 +1,7 @@
 <?php
 
 namespace MusicBrainz\models;
+use MusicBrainz\MusicBrainz;
 
 /**
  * @property string $time
@@ -21,6 +22,38 @@ namespace MusicBrainz\models;
  */
 class Event extends ParserModel
 {
+    public static function includes()
+    {
+        return [
+            MusicBrainz::CALL_TYPE_LOOKUP => [
+                Includes::aliases,
+                Includes::annotation,
+                Includes::tags,
+                Includes::userTags,
+                Includes::rating,
+                Includes::userRating,
+            ],
+            MusicBrainz::CALL_TYPE_BROWSE => [
+                Includes::aliases,
+                Includes::annotation,
+                Includes::tags,
+                Includes::userTags,
+                Includes::rating,
+                Includes::userRating,
+            ],
+            MusicBrainz::CALL_TYPE_SEARCH => [],
+        ];
+    }
+
+    public static function links()
+    {
+        return [
+            EntityType::area,
+            EntityType::artist,
+            EntityType::place
+        ];
+    }
+
     public function config()
     {
         return [

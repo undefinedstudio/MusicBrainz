@@ -1,6 +1,7 @@
 <?php
 
 namespace MusicBrainz\models;
+use MusicBrainz\MusicBrainz;
 
 /**
  * @property string $id
@@ -26,6 +27,49 @@ namespace MusicBrainz\models;
  */
 class Artist extends ParserModel
 {
+    public static function includes()
+    {
+        return [
+            MusicBrainz::CALL_TYPE_LOOKUP => [
+                Includes::recordings,
+                Includes::releases,
+                Includes::releaseGroups,
+                Includes::works,
+                Includes::aliases,
+                Includes::variousArtists,
+                Includes::annotation,
+                Includes::tags,
+                Includes::userTags,
+                Includes::rating,
+                Includes::userRating,
+                Includes::artistCredits,
+                Includes::isrcs,
+                Includes::discs,
+                Includes::media
+            ],
+            MusicBrainz::CALL_TYPE_BROWSE => [
+                Includes::aliases,
+                Includes::annotation,
+                Includes::tags,
+                Includes::userTags,
+                Includes::rating,
+                Includes::userRating,
+            ],
+            MusicBrainz::CALL_TYPE_SEARCH => [],
+        ];
+    }
+
+    public static function links()
+    {
+        return [
+            EntityType::area,
+            EntityType::recording,
+            EntityType::release,
+            EntityType::releaseGroup,
+            EntityType::work
+        ];
+    }
+
     public function config()
     {
         return [

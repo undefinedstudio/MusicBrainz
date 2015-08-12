@@ -1,6 +1,7 @@
 <?php
 
 namespace MusicBrainz\models;
+use MusicBrainz\MusicBrainz;
 
 /**
  * @property string $id
@@ -13,6 +14,20 @@ namespace MusicBrainz\models;
  */
 class Series extends ParserModel
 {
+    public static function includes()
+    {
+        return [
+            MusicBrainz::CALL_TYPE_LOOKUP => [
+                Includes::aliases,
+                Includes::annotation,
+                Includes::tags,
+                Includes::userTags
+            ],
+            MusicBrainz::CALL_TYPE_BROWSE => [],
+            MusicBrainz::CALL_TYPE_SEARCH => [],
+        ];
+    }
+
     public function config()
     {
         return [

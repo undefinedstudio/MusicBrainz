@@ -15,6 +15,7 @@ abstract class EntityType
     const series = 'series';
     const work = 'work';
     const url = 'url';
+    const place = 'place';
 
     const rating = 'rating';
     const tag = 'tag';
@@ -36,6 +37,7 @@ abstract class EntityType
         self::series => Series::class,
         self::work => Work::class,
         self::url => Url::class,
+        self::place => Place::class,
         self::rating => Rating::class,
         self::tag => Tag::class,
         //self::collection => Collection::class,

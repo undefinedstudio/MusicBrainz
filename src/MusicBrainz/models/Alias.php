@@ -3,10 +3,10 @@
 namespace MusicBrainz\models;
 
 /**
- * @property string $type
- * @property string $primary
  * @property string $name
  * @property string $sortName
+ * @property string $type
+ * @property string $primary
  * @property string $locale
  */
 class Alias extends ParserModel

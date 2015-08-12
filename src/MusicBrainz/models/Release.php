@@ -1,6 +1,7 @@
 <?php
 
 namespace MusicBrainz\models;
+use MusicBrainz\MusicBrainz;
 
 /**
  * @property string $id
@@ -26,9 +27,56 @@ namespace MusicBrainz\models;
  * @property Rating $rating
  * @property UserRating $userRating
  * @property UserTag[] $userTags
+ * @property Collection[] $collections
  */
 class Release extends ParserModel
 {
+    public static function includes()
+    {
+        return [
+            MusicBrainz::CALL_TYPE_LOOKUP => [
+                Includes::artists,
+                Includes::labels,
+                Includes::recordings,
+                Includes::releaseGroups,
+                Includes::aliases,
+                Includes::tags,
+                Includes::userTags,
+                Includes::rating,
+                Includes::userRating,
+                Includes::collections,
+                Includes::artistCredits,
+                Includes::discs,
+                Includes::media,
+                Includes::annotation,
+                Includes::isrcs
+            ],
+            MusicBrainz::CALL_TYPE_BROWSE => [
+                Includes::aliases,
+                Includes::artistCredits,
+                Includes::labels,
+                Includes::recordings,
+                Includes::discs,
+                Includes::releaseGroups,
+                Includes::media,
+                Includes::annotation,
+                Includes::isrcs,
+            ],
+            MusicBrainz::CALL_TYPE_SEARCH => [],
+        ];
+    }
+
+    public static function links()
+    {
+        return [
+            EntityType::area,
+            EntityType::artist,
+            EntityType::label,
+            EntityType::recording,
+            EntityType::releaseGroup
+        ];
+    }
+
     public function config()
     {
         return [
@@ -81,6 +129,10 @@ class Release extends ParserModel
             'user-tags' => [
                 'name' => 'userTags',
                 'class' => UserTag::class,
+                'multiple' => true
+            ],
+            'collections' => [
+                'class' => Collection::class,
                 'multiple' => true
             ],
         ];

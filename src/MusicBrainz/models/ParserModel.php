@@ -3,6 +3,7 @@
 namespace MusicBrainz\models;
 
 use Exception;
+use MusicBrainz\MusicBrainz;
 
 class ParserModel
 {
@@ -20,6 +21,20 @@ class ParserModel
         } else {
             return null;
         }
+    }
+
+    public static function includes()
+    {
+        return [
+            MusicBrainz::CALL_TYPE_LOOKUP => [],
+            MusicBrainz::CALL_TYPE_BROWSE => [],
+            MusicBrainz::CALL_TYPE_SEARCH => [],
+        ];
+    }
+
+    public static function links()
+    {
+        return [];
     }
 
     /**

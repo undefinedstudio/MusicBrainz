@@ -1,6 +1,7 @@
 <?php
 
 namespace MusicBrainz\models;
+use MusicBrainz\MusicBrainz;
 
 /**
  * @property string $title
@@ -20,6 +21,36 @@ namespace MusicBrainz\models;
  */
 class Work extends ParserModel
 {
+    public static function includes()
+    {
+        return [
+            MusicBrainz::CALL_TYPE_LOOKUP => [
+                Includes::aliases,
+                Includes::annotation,
+                Includes::tags,
+                Includes::userTags,
+                Includes::rating,
+                Includes::userRating
+            ],
+            MusicBrainz::CALL_TYPE_BROWSE => [
+                Includes::aliases,
+                Includes::annotation,
+                Includes::tags,
+                Includes::userTags,
+                Includes::rating,
+                Includes::userRating
+            ],
+            MusicBrainz::CALL_TYPE_SEARCH => [],
+        ];
+    }
+
+    public static function links()
+    {
+        return [
+            EntityType::artist
+        ];
+    }
+
     public function config()
     {
         return [

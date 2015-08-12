@@ -17,6 +17,10 @@ class MusicBrainz
     /** @var Client|null */
     private $_client = null;
 
+    const CALL_TYPE_LOOKUP = 'lookup';
+    const CALL_TYPE_BROWSE = 'browse';
+    const CALL_TYPE_SEARCH = 'search';
+
     public function __construct($username = null, $password = null)
     {
         if (!empty($username) && !empty($password)) {
@@ -126,7 +130,7 @@ class MusicBrainz
             $options->setHttpAuth($this->_username, $this->_password);
         }
 
-        $includes = Includes::validate($entityType, $includes, $options);
+        $includes = Includes::validate($entityType, $includes, $options, self::CALL_TYPE_LOOKUP);
         $path = $entityType . "/" . $mbid;
         $query = [
             'inc' => implode('+', $includes),
@@ -135,6 +139,45 @@ class MusicBrainz
 
         $callResponse = $this->call($path, $query, $options);
         $callResponseDecoded = json_decode($callResponse, true);
+        $responseObject = $this->buildResponseObject($entityType, $callResponseDecoded);
+
+        return $responseObject;
+    }
+
+    public function browse($entityType, $referenceEntityType, $referenceMbid, $includes = [], CallOptions $options = null)
+    {
+        if (!Utilities::isValidEntityType($entityType)) {
+            throw new Exception("EntityType " . $entityType . " is not valid.");
+        }
+
+        if (!Utilities::isValidEntityType($referenceEntityType)) {
+            throw new Exception("EntityType " . $referenceEntityType . " is not valid.");
+        }
+
+        if (!in_array($referenceEntityType, EntityType::nonMBIDFormat) && !Utilities::isValidMbid($referenceMbid)) {
+            throw new Exception("MusicBrainz ID " . $referenceMbid . " is not valid.");
+        }
+
+        if (empty($options)) {
+            $options = new CallOptions();
+        }
+
+        if ($this->isHttpAuthDoable() && !$options->isHttpAuthDoable()) {
+            $options->setHttpAuth($this->_username, $this->_password);
+        }
+
+        //$includes = Includes::validate($entityType, $includes, $options);
+
+        $path = $entityType;
+        $query = [
+            $referenceEntityType => $referenceMbid,
+            'inc' => implode('+', $includes),
+            'fmt' => 'json'
+        ];
+
+        $callResponse = $this->call($path, $query, $options);
+        $callResponseDecoded = json_decode($callResponse, true);
+        var_dump($callResponseDecoded);die();
         $responseObject = $this->buildResponseObject($entityType, $callResponseDecoded);
 
         return $responseObject;
