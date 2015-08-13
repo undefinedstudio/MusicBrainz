@@ -11,8 +11,8 @@ abstract class Includes
     const authRequired = 'authRequired';
     const dependencyRequired = 'dependencyRequired';
     const includeEverything = 'includeEverything';
-    const lookup = 'lookup';
-    const browse = 'browse';
+    const includes = 'includes';
+    const entityTypes = 'entityTypes';
 
     const artists = 'artists';
     const labels = 'labels';
@@ -49,7 +49,7 @@ abstract class Includes
             self::recordings,
             self::releases,
             self::releaseGroups,
-            self::works,
+            self::works
         ],
         self::isrcs => [
             self::recordings
@@ -80,55 +80,10 @@ abstract class Includes
         ]
     ];
 
-    static function validateOld($entityType, $includes, CallOptions $options)
-    {
-        if (!count($includes)) {
-            return true;
-        }
-        $thisRef = new ReflectionClass(self::class);
-
-        $entityTypeConstants = Utilities::getClassConstants(EntityType::class);
-        $entityTypeName = array_search($entityType, $entityTypeConstants);
-        $includeRules = $thisRef->getConstant($entityTypeName . 'Rules');
-
-        if (in_array(self::includeEverything, $includes)) {
-            $includes = array_keys($includeRules);
-        }
-
-        foreach ($includes as $include) {
-            // If a rule is not found, it means the include required is not allowed for the entityType
-            if (!isset($includeRules[$include])) {
-                throw new Exception("The '" . $include . "' include is not valid for the '" . $entityType ."' EntityType.");
-            }
-            // If the rule is not an array, it means the include required is good to go
-            if (!count($includeRules[$include])) {
-                continue;
-            }
-            // If the rules requires dependencies
-            if (isset($includeRules[$include][self::dependencyRequired])) {
-                foreach ($includeRules[$include][self::dependencyRequired] as $i => $dependencyRequired) {
-                    if (!in_array($dependencyRequired, $includes)) {
-                        throw new Exception("The '" . $dependencyRequired . "' include is required by the '" . $include . "' include for the '" . $entityType ."' EntityType.");
-                    } else {
-                        break;
-                    }
-                }
-            }
-
-            if (isset($includeRules[$include][self::authRequired]) && $includeRules[$include][self::authRequired]) {
-                $options->authRequired = true;
-                if (!$options->isHttpAuthDoable()) {
-                    throw new Exception("Authentication is required by the '" . $include . "' include for the '" . $entityType ."' EntityType.");
-                }
-            }
-        }
-        return $includes;
-    }
-
     static function validate($entityType, $includes, CallOptions $options, $callType)
     {
         if (!count($includes)) {
-            return true;
+            return $includes;
         }
 
         $modelMap = EntityType::modelMap;
@@ -141,6 +96,7 @@ abstract class Includes
         $config = $config[$callType];
         $includeDependencies = self::includeDependencies;
         $authDependencies = self::authDependencies;
+        $includeMap = EntityType::includeMap;
 
         if (in_array(self::includeEverything, $includes)) {
             $includes = $config;
@@ -167,6 +123,9 @@ abstract class Includes
                     if (in_array($includeDependency, $config)) {
                         $dependenciesRequired[] = $includeDependency;
                     }
+                }
+                if (array_key_exists($entityType, $includeMap) && in_array($includeMap[$entityType], $includeDependencies[$include])) {
+                    continue;
                 }
                 if (count($dependenciesRequired)) {
                     throw new Exception("The '" . $include . "' include is not valid for

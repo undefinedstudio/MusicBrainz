@@ -73,7 +73,8 @@ class Release extends ParserModel
             EntityType::artist,
             EntityType::label,
             EntityType::recording,
-            EntityType::releaseGroup
+            EntityType::releaseGroup,
+            EntityType::track,
         ];
     }
 

@@ -4,6 +4,7 @@ namespace MusicBrainz;
 
 use Exception;
 use GuzzleHttp\Client;
+use MusicBrainz\models\BrowseResponse;
 use MusicBrainz\models\CallOptions;
 use MusicBrainz\models\EntityType;
 use MusicBrainz\models\Includes;
@@ -114,7 +115,7 @@ class MusicBrainz
 
     public function lookup($entityType, $mbid, $includes = [], CallOptions $options = null)
     {
-        if (!Utilities::isValidEntityType($entityType)) {
+        if (!Utilities::isValidLookupEntityType($entityType)) {
             throw new Exception("EntityType " . $entityType . " is not valid.");
         }
 
@@ -139,23 +140,23 @@ class MusicBrainz
 
         $callResponse = $this->call($path, $query, $options);
         $callResponseDecoded = json_decode($callResponse, true);
-        $responseObject = $this->buildResponseObject($entityType, $callResponseDecoded);
+        $responseObject = $this->buildResponseObject($entityType, $callResponseDecoded, self::CALL_TYPE_LOOKUP);
 
         return $responseObject;
     }
 
     public function browse($entityType, $referenceEntityType, $referenceMbid, $includes = [], CallOptions $options = null)
     {
-        if (!Utilities::isValidEntityType($entityType)) {
-            throw new Exception("EntityType " . $entityType . " is not valid.");
+        if (!Utilities::isValidBrowseEntityType($entityType)) {
+            throw new Exception("EntityType '" . $entityType . "' is not valid.");
         }
 
         if (!Utilities::isValidEntityType($referenceEntityType)) {
-            throw new Exception("EntityType " . $referenceEntityType . " is not valid.");
+            throw new Exception("EntityType '" . $referenceEntityType . "' is not valid.");
         }
 
         if (!in_array($referenceEntityType, EntityType::nonMBIDFormat) && !Utilities::isValidMbid($referenceMbid)) {
-            throw new Exception("MusicBrainz ID " . $referenceMbid . " is not valid.");
+            throw new Exception("MusicBrainz ID '" . $referenceMbid . "' is not valid.");
         }
 
         if (empty($options)) {
@@ -165,8 +166,13 @@ class MusicBrainz
         if ($this->isHttpAuthDoable() && !$options->isHttpAuthDoable()) {
             $options->setHttpAuth($this->_username, $this->_password);
         }
+        $modelMap = EntityType::modelMap;
+        $links = call_user_func($modelMap[$entityType] . '::links');
+        if (!in_array($referenceEntityType, $links)) {
+            throw new Exception("EntityType '" . $referenceEntityType . "' is not a valid link for EntityType '" . $entityType . "'.");
+        }
 
-        //$includes = Includes::validate($entityType, $includes, $options);
+        $includes = Includes::validate($entityType, $includes, $options, self::CALL_TYPE_BROWSE);
 
         $path = $entityType;
         $query = [
@@ -177,8 +183,7 @@ class MusicBrainz
 
         $callResponse = $this->call($path, $query, $options);
         $callResponseDecoded = json_decode($callResponse, true);
-        var_dump($callResponseDecoded);die();
-        $responseObject = $this->buildResponseObject($entityType, $callResponseDecoded);
+        $responseObject = $this->buildResponseObject($entityType, $callResponseDecoded, self::CALL_TYPE_BROWSE);
 
         return $responseObject;
     }
@@ -215,18 +220,23 @@ class MusicBrainz
         return (string)$response->getBody();
     }
 
-    public function buildResponseObject($entityType, $callResponse)
+    public function buildResponseObject($entityType, $callResponse, $callType)
     {
-        $modelMap = EntityType::modelMap;
-        if (!isset($modelMap[$entityType])) {
-            throw new Exception("No model map found for " . $entityType . " EntityType.");
+        if ($callType == self::CALL_TYPE_BROWSE) {
+            $className = BrowseResponse::class;
+        } else if ($callType == self::CALL_TYPE_LOOKUP) {
+            $modelMap = EntityType::modelMap;
+            if (!isset($modelMap[$entityType])) {
+                throw new Exception("No model map found for " . $entityType . " EntityType.");
+            }
+
+            if (!is_array($callResponse)) {
+                throw new Exception("A null response was received.");
+            }
+
+            $className = $modelMap[$entityType];
         }
 
-        if (!is_array($callResponse)) {
-            throw new Exception("A null response was received.");
-        }
-
-        $className = $modelMap[$entityType];
         return call_user_func($className . '::create', $callResponse);
 
     }
