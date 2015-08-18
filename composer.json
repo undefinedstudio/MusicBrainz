@@ -2,6 +2,7 @@
     "name": "undefinedstudio/musicbrainz",
     "type": "library",
     "description": "A PHP library that wraps MusicBrainz webservices",
+    "license": "BSD-3-Clause",
     "authors": [
         {
             "name": "Luca Gatti",
