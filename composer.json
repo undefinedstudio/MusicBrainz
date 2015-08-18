@@ -1,0 +1,39 @@
+{
+  "name": "undefinedstudio/musicbrainz",
+  "type": "library",
+  "description": "A PHP library that wraps MusicBrainz webservices",
+  "authors": [
+      {
+          "name": "Luca Gatti",
+          "email": "luca.horn@gmail.com",
+          "homepage": "http://twistedmirrorgames.com"
+      },
+      {
+          "name": "Gabriele Della Casa Venturelli",
+          "email": "hardsetting@gmail.com",
+          "homepage": "http://twistedmirrorgames.com"
+      },
+      {
+          "name": "Davide Della Casa Venturelli",
+          "email": "daliran88@gmail.com",
+          "homepage": "http://twistedmirrorgames.com"
+      }
+  ],
+  "keywords": [
+      "musicbrainz",
+      "library",
+      "php",
+      "webservice",
+      "api"
+  ],
+  "homepage": "https://github.com/undefinedstudio",
+  "require": {
+      "php": ">=5.6",
+      "guzzlehttp/guzzle": "~6.0"
+  },
+  "autoload": {
+      "psr-0": {
+          "MusicBrainz": "src/"
+      }
+  }
+}

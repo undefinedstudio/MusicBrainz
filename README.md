@@ -1,1 +1,1 @@
-# MusicBrainz
+# MusicBrainz Web Service PHP wrapper
