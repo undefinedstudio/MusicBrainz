@@ -4,9 +4,12 @@ namespace MusicBrainz\models;
 
 abstract class EntityType
 {
+    const annotation = 'annotation';
     const area = 'area';
     const artist = 'artist';
+    const cdstub = 'cdstub';
     const event = 'event';
+    const freedb = 'freedb';
     const instrument = 'instrument';
     const label = 'label';
     const recording = 'recording';
@@ -77,6 +80,21 @@ abstract class EntityType
         self::recording,
         self::release,
         self::releaseGroup,
+        self::work
+    ];
+
+    const search = [
+        self::annotation,
+        self::area,
+        self::artist,
+        self::cdstub,
+        self::freedb,
+        self::label,
+        self::place,
+        self::recording,
+        self::releaseGroup,
+        self::release,
+        self::tag,
         self::work
     ];
 

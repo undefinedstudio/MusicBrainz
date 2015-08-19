@@ -32,8 +32,11 @@
         "php": ">=5.6",
         "guzzlehttp/guzzle": "~6.0"
     },
+    "suggest": {
+        "zendframework/zendsearch": "Helps building the queries."
+    },
     "autoload": {
-        "psr-0": {
+        "psr-4": {
             "MusicBrainz": "src/"
         }
     }

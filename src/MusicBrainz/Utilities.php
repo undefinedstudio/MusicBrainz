@@ -23,6 +23,11 @@ class Utilities
         return in_array($entityType, EntityType::browse);
     }
 
+    public static function isValidSearchEntityType($entityType)
+    {
+        return in_array($entityType, EntityType::search);
+    }
+
     public static function isValidCallType($callType)
     {
         $constants = self::getClassConstants(CallType::class);

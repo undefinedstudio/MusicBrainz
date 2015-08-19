@@ -8,6 +8,8 @@ use MusicBrainz\models\BrowseResponse;
 use MusicBrainz\models\CallOptions;
 use MusicBrainz\models\EntityType;
 use MusicBrainz\models\Includes;
+use MusicBrainz\models\SearchResponse;
+
 class MusicBrainz
 {
     public $wsUrl = "http://musicbrainz.org/ws/2/";
@@ -188,6 +190,33 @@ class MusicBrainz
         return $responseObject;
     }
 
+    public function search($entityType, $query, CallOptions $options = null)
+    {
+        if (!Utilities::isValidSearchEntityType($entityType)) {
+            throw new Exception("EntityType '" . $entityType . "' is not valid.");
+        }
+
+        if (empty($options)) {
+            $options = new CallOptions();
+        }
+
+        if ($this->isHttpAuthDoable() && !$options->isHttpAuthDoable()) {
+            $options->setHttpAuth($this->_username, $this->_password);
+        }
+
+        $path = $entityType;
+        $query = [
+            'query' => $query,
+            'fmt' => 'json'
+        ];
+
+        $callResponse = $this->call($path, $query, $options);
+        $callResponseDecoded = json_decode($callResponse, true);
+        $responseObject = $this->buildResponseObject($entityType, $callResponseDecoded, self::CALL_TYPE_SEARCH);
+
+        return $responseObject;
+    }
+
     public function call($path, $query, CallOptions $options = null)
     {
         if (empty($options)) {
@@ -224,6 +253,8 @@ class MusicBrainz
     {
         if ($callType == self::CALL_TYPE_BROWSE) {
             $className = BrowseResponse::class;
+        } else if ($callType == self::CALL_TYPE_SEARCH) {
+            $className = SearchResponse::class;
         } else if ($callType == self::CALL_TYPE_LOOKUP) {
             $modelMap = EntityType::modelMap;
             if (!isset($modelMap[$entityType])) {
