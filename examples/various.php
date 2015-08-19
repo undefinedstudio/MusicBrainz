@@ -2,9 +2,9 @@
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-use MusicBrainz\models\EntityType;
-use MusicBrainz\MusicBrainz;
-use MusicBrainz\models\Includes;
+use undefinedstudio\MusicBrainz\models\EntityType;
+use undefinedstudio\MusicBrainz\MusicBrainz;
+use undefinedstudio\MusicBrainz\models\Includes;
 
 $mb = new MusicBrainz();
 $mb->setUserAgent('EternityMBLibrary', '0.0.1', 'luca.horn@gmail.com');
