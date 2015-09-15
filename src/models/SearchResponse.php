@@ -119,6 +119,14 @@ class SearchResponse extends ParserModel
                 'class' => Recording::class,
                 'multiple' => true
             ],
+            'releases' => [
+                'class' => Release::class,
+                'multiple' => true
+            ],
+            'artists' => [
+                'class' => Release::class,
+                'multiple' => true
+            ],
         ];
     }
 }
